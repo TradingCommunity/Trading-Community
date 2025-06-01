@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paiement Réservation</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: white;
+      --card-bg: #1e1e1e;
+      --accent: #00c3ff;
+    }
+
+    body.light {
+      --bg-color: #f5f5f5;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --accent: #007bff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #333;
+    }
+
+    .title {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .content {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .info-box {
+      background: var(--card-bg);
+      border-left: 5px solid var(--accent);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .info-box p {
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+
+    .form-section {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .form-section label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-section input,
+    .form-section textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      box-sizing: border-box;
+      background: #eaeaea;
+      color: #000;
+    }
+
+    body.dark .form-section input,
+    body.dark .form-section textarea {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    .submit button {
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 2px solid #333;
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.75em;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav a:hover {
+      color: var(--accent);
+    }
+
+    .bottom-nav svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="title">
+      <span style="color: var(--accent);">Paiement</span>
+      <span style="color: gray;"> & </span>
+      <span style="color: #2ecc71;">Confirmation</span>
+    </div>
+    <div class="theme-toggle" id="themeToggle">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="info-box">
+      <p>
+        <strong>Montant :</strong>
+        <span style="color: #e91e63; font-weight: bold;">300.000 MGA / 60 EUR</span><br>
+        Merci de payer avant de valider l'accès.
+      </p>
+      <p><strong style="color: #2ecc71;">Mvola :</strong> 0387753496</p>
+      <p><strong style="color: var(--accent);">Nom :</strong> Hendrinirina Michel</p>
+    </div>
+
+    <div class="form-section">
+      <label for="name">Nom complet</label>
+      <input type="text" id="name" placeholder="Votre nom" required />
+
+      <label for="email">Adresse email</label>
+      <input type="email" id="email" placeholder="exemple@mail.com" required />
+
+      <label for="proof">Référence ou preuve de paiement</label>
+      <textarea id="proof" rows="3" placeholder="Ex : numéro de transaction Mvola..."></textarea>
+
+      <div class="submit">
+        <button onclick="sendReservation()">Valider mon accès</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="bitget.html"><i data-lucide="home"></i>Accueil</a>
+    <a href="formation.html"><i data-lucide="book-open"></i>Formations</a>
+    <a href="premium.html"><i data-lucide="star"></i>Premium</a>
+    <a href="compte.html"><i data-lucide="user-round"></i>Compte</a>
+  </nav>
+
+  <script>
+    lucide.createIcons();
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.classList.remove("light", "dark");
+      document.body.classList.add(mode);
+      themeIcon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    setTheme(localStorage.getItem("theme") || "dark");
+
+    function sendReservation() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const proof = document.getElementById("proof").value.trim();
+
+      if (!name || !email || !proof) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
+
+      alert("Réservation envoyée avec succès ! Veuillez entrer votre clé d’activation.");
+      localStorage.removeItem("reservationSlots");
+      window.location.href = "activation-cle.html";
+    }
+  </script>
+  <script>
+  if (!localStorage.getItem("isLoggedIn")) {
+    window.location.href = "auth.html";
+  }
+</script>
+</body>
+</html>
