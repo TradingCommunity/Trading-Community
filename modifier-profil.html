@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modifier Profil</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: #fff;
+      --card-bg: #1e1e1e;
+      --accent: #00f0ff;
+      --input-bg: #2a2a2a;
+      --title-color: #fff;
+    }
+
+    body.light {
+      --bg-color: #f2f2f2;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --accent: #007bff;
+      --input-bg: #e6e6e6;
+      --title-color: #1a1a1a;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #333;
+    }
+
+    .top-bar .left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .top-bar i {
+      cursor: pointer;
+    }
+
+    .title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    input, select {
+      width: 100%;
+      height: 48px;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: none;
+      background: var(--input-bg);
+      color: var(--text-color);
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      height: 48px;
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="left">
+      <i data-lucide="arrow-left" onclick="window.location.href='compte.html'"></i>
+      <div class="title">Modifier mes infos</div>
+    </div>
+    <div class="theme-toggle" id="themeToggle" title="Changer de thème">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="form-container">
+    <input type="text" id="username" placeholder="Nom d'utilisateur" />
+    <input type="email" id="email" placeholder="Adresse email" />
+    <input type="password" id="password" placeholder="Mot de passe" />
+    
+    <select id="country">
+      <option value="">Sélectionnez votre pays</option>
+      <option value="Madagascar">Madagascar</option>
+      <option value="France">France</option>
+      <option value="Belgique">Belgique</option>
+      <option value="Suisse">Suisse</option>
+      <option value="Canada">Canada</option>
+      <option value="Luxembourg">Luxembourg</option>
+      <option value="Cameroun">Cameroun</option>
+      <option value="Sénégal">Sénégal</option>
+      <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+      <option value="RDC">République Démocratique du Congo</option>
+    </select>
+
+    <select id="level">
+      <option value="">Niveau en trading</option>
+      <option value="Débutant">Débutant</option>
+      <option value="Intermédiaire">Intermédiaire</option>
+      <option value="Avancé">Avancé</option>
+    </select>
+
+    <button onclick="updateProfile()">Enregistrer</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const toggle = document.getElementById("themeToggle");
+    const icon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.className = mode;
+      icon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    toggle.addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    setTheme(localStorage.getItem("theme") || "dark");
+
+    const currentUser = localStorage.getItem("currentUser");
+    if (!currentUser) window.location.href = "auth.html";
+
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const usernameInput = document.getElementById("username");
+    const countryInput = document.getElementById("country");
+    const levelInput = document.getElementById("level");
+    const errorMsg = document.getElementById("errorMsg");
+
+    if (users[currentUser]) {
+      usernameInput.value = users[currentUser].username || "";
+      emailInput.value = currentUser;
+      passwordInput.value = users[currentUser].password;
+      countryInput.value = users[currentUser].country;
+      levelInput.value = users[currentUser].level;
+    }
+
+    function updateProfile() {
+      const newUsername = usernameInput.value.trim();
+      const newEmail = emailInput.value.trim();
+      const newPassword = passwordInput.value.trim();
+      const newCountry = countryInput.value;
+      const newLevel = levelInput.value;
+
+      if (!newUsername || !newEmail || !newPassword || !newCountry || !newLevel) {
+        errorMsg.textContent = "Veuillez remplir tous les champs.";
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        errorMsg.textContent = "Adresse email invalide.";
+        return;
+      }
+
+      if (newEmail !== currentUser && users[newEmail]) {
+        errorMsg.textContent = "Cet email est déjà utilisé.";
+        return;
+      }
+
+      delete users[currentUser];
+      users[newEmail] = {
+        username: newUsername,
+        password: newPassword,
+        country: newCountry,
+        level: newLevel
+      };
+
+      localStorage.setItem("users", JSON.stringify(users));
+      localStorage.setItem("currentUser", newEmail);
+      window.location.href = "compte.html";
+    }
+  </script>
+</body>
+</html>
