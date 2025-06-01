@@ -196,6 +196,11 @@
   <script>
     lucide.createIcons();
 
+    // 🔁 Rediriger automatiquement vers la page d’accueil si déjà connecté
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      window.location.href = "bitget.html";
+    }
+
     const themeToggle = document.getElementById("themeToggle");
     const themeIcon = document.getElementById("themeIcon");
 
@@ -235,6 +240,11 @@
       extraFields.style.display = isLogin ? "none" : "block";
       usernameInput.style.display = isLogin ? "none" : "block";
     };
+
+    // ✅ Forcer le mode Connexion si pas connecté
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      toggleLink.click();
+    }
 
     extraFields.style.display = "block";
     usernameInput.style.display = "block";
