@@ -209,12 +209,7 @@
       <div class="email" id="displayEmail">Email</div>
     </div>
 
-    <div class="stats">
-      <h3>Vos informations</h3>
-      <p>Formations gratuites suivies : <strong>4 / 6</strong></p>
-      <p>Réservations premium : <strong>5 séances</strong></p>
-      <p>Date de création du compte : <strong>2024-11-01</strong></p>
-    </div>
+    <div class="stats" id="userStats"></div>
 
     <button class="btn-logout" onclick="logout()">Se déconnecter</button>
     <a href="modifier-profil.html" class="btn-edit">Modifier mes informations</a>
@@ -268,16 +263,26 @@
     const users = JSON.parse(localStorage.getItem("users") || "{}");
 
     if (users[currentUser]) {
-      document.getElementById("displayName").textContent =
-        users[currentUser].username || "Nom utilisateur";
-      document.getElementById("displayEmail").textContent =
-        currentUser;
+      document.getElementById("displayName").textContent = users[currentUser].username || "Nom utilisateur";
+      document.getElementById("displayEmail").textContent = currentUser;
     }
+
+    const progress = JSON.parse(localStorage.getItem("formationProgress") || "{}");
+    const reservations = JSON.parse(localStorage.getItem("premiumReservations") || "{}");
+    const doneLessons = progress[currentUser] || 0;
+    const donePremium = reservations[currentUser] || 0;
+
+    document.getElementById("userStats").innerHTML = `
+      <h3>Vos informations</h3>
+      <p>Formations gratuites suivies : <strong>${doneLessons} / 6</strong></p>
+      <p>Réservations premium : <strong>${donePremium} séances</strong></p>
+      <p>Date de création du compte : <strong>2024-11-01</strong></p>
+    `;
 
     function logout() {
       localStorage.setItem("isLoggedIn", "false");
       alert("Déconnexion réussie !");
-      window.location.href = "https://tradingcommunity.github.io/Trading-Community/";
+      window.location.href = "index.html";
     }
   </script>
 </body>
