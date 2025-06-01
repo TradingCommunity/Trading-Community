@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Séance 1 - Introduction au Trading</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: white;
+      --card-bg: #1e1e1e;
+      --accent: #00f0ff;
+    }
+
+    body.light {
+      --bg-color: #f9f9f9;
+      --text-color: #1a1a1a;
+      --card-bg: #fff;
+      --accent: #007bff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #d6336c;
+      border-bottom: 2px solid #333;
+    }
+
+    .title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .pdf-container {
+      padding: 15px;
+      height: calc(100vh - 160px);
+    }
+
+    .pdf-container embed {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .instructions {
+      text-align: center;
+      margin: 15px;
+      font-size: 1em;
+      background: var(--card-bg);
+      padding: 10px 15px;
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 8px;
+      border-top: 2px solid #333;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 0.75em;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav a:hover {
+      color: var(--accent);
+    }
+
+    .bottom-nav svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 3px;
+      stroke-width: 2;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="title">Séance 1 : Introduction au trading</div>
+    <div class="theme-toggle" id="themeToggle" title="Changer de thème">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="instructions">
+    Lis attentivement cette séance et cherche le <strong>mot-clé</strong> dans le PDF pour débloquer la suivante. <strong>Attention</strong>: tu es ici pour te former sérieusement, pas seulement pour chercher un mot-clé. C'est justement le but, pour que tu te focalise sur tes études en trading.
+  </div>
+
+  <div class="pdf-container">
+    <embed src="demo.pdf" type="application/pdf">
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="bitget.html"><i data-lucide="home"></i>Accueil</a>
+    <a href="formation.html"><i data-lucide="book-open"></i>Formations</a>
+    <a href="#"><i data-lucide="calendar-days"></i>Événements</a>
+    <a href="#"><i data-lucide="user-round"></i>Compte</a>
+  </nav>
+
+  <script>
+    lucide.createIcons();
+
+    const toggle = document.getElementById("themeToggle");
+    const icon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.className = mode;
+      icon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    toggle.addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    setTheme(savedTheme);
+  </script>
+</body>
+</html>
