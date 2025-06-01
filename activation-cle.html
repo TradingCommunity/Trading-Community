@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clé d’activation</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: white;
+      --card-bg: #1e1e1e;
+      --accent: #00c3ff;
+      --error: #e91e63;
+    }
+
+    body.light {
+      --bg-color: #f9f9f9;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --accent: #007bff;
+      --error: #d6336c;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: 0.3s ease;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #333;
+    }
+
+    .title {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .container {
+      max-width: 90%;
+      width: 360px;
+      margin: 60px auto 100px;
+      background: var(--card-bg);
+      padding: 25px 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      font-size: 1em;
+      margin-top: 15px;
+      box-sizing: border-box;
+    }
+
+    body.light input {
+      background: #eaeaea;
+      color: #1a1a1a;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .error {
+      color: var(--error);
+      font-size: 0.9em;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Clé d’activation</div>
+    <div class="theme-toggle" id="themeToggle" title="Changer de thème">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="container">
+    <p>Veuillez entrer la clé fournie après paiement pour débloquer votre accès.</p>
+    <input type="text" id="activationKey" placeholder="Ex : Trading-Community-2025 " />
+    <button onclick="verifyKey()">Valider</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.className = mode;
+      themeIcon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const currentTheme = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(currentTheme);
+    });
+
+    setTheme(localStorage.getItem("theme") || "dark");
+
+    function verifyKey() {
+      const userKey = document.getElementById("activationKey").value.trim();
+      const errorBox = document.getElementById("errorMsg");
+      const correctKey = "TC-bydrix-2025";
+
+      if (userKey === correctKey) {
+        localStorage.setItem("hasActivated", "true");
+        window.location.href = "preenregistree.html";
+      } else {
+        errorBox.textContent = "Clé invalide. Vérifiez et réessayez.";
+      }
+    }
+  </script>
+</body>
+</html>
