@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formation Préenregistrée</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: white;
+      --card-bg: #1e1e1e;
+      --accent: #00c3ff;
+    }
+
+    body.light {
+      --bg-color: #f5f5f5;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --accent: #007bff;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      transition: 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #333;
+    }
+
+    .title {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .step {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--accent);
+    }
+
+    .step h3 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+
+    .step iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+
+    .step input {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 2px solid #333;
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.75em;
+    }
+
+    .bottom-nav a:hover {
+      color: var(--accent);
+    }
+
+    .bottom-nav svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="title">Formation PDF + Vidéos</div>
+    <div class="theme-toggle" id="themeToggle">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Étape 1 visible -->
+    <div class="step" id="step1">
+      <h3>Étape 1 : Introduction au Trading</h3>
+      <p><a href="pdfs/seance1.pdf" target="_blank" style="color: var(--accent);">Lire le PDF</a></p>
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+    </div>
+
+    <!-- Étape 2 -->
+    <div class="step" id="step2">
+      <h3>Étape 2 : Analyser les marchés</h3>
+      <div id="step2-content" class="hidden">
+        <p><a href="pdfs/seance2.pdf" target="_blank" style="color: var(--accent);">Lire le PDF</a></p>
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+      </div>
+      <input type="text" id="key2" placeholder="Entrez le mot-clé pour déverrouiller" oninput="checkKey(2, 'clef2')">
+    </div>
+
+    <!-- Étape 3 -->
+    <div class="step" id="step3">
+      <h3>Étape 3 : Gestion du risque</h3>
+      <div id="step3-content" class="hidden">
+        <p><a href="pdfs/seance3.pdf" target="_blank" style="color: var(--accent);">Lire le PDF</a></p>
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+      </div>
+      <input type="text" id="key3" placeholder="Entrez le mot-clé pour déverrouiller" oninput="checkKey(3, 'clef3')">
+    </div>
+
+    <!-- Étape 4 -->
+    <div class="step" id="step4">
+      <h3>Étape 4 : Stratégies avancées</h3>
+      <div id="step4-content" class="hidden">
+        <p><a href="pdfs/seance4.pdf" target="_blank" style="color: var(--accent);">Lire le PDF</a></p>
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+      </div>
+      <input type="text" id="key4" placeholder="Entrez le mot-clé pour déverrouiller" oninput="checkKey(4, 'clef4')">
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="bitget.html"><i data-lucide="home"></i>Accueil</a>
+    <a href="formation.html"><i data-lucide="book-open"></i>Formations</a>
+    <a href="choix-premium.html"><i data-lucide="star"></i>Premium</a>
+    <a href="#"><i data-lucide="user-round"></i>Compte</a>
+  </nav>
+
+  <script>
+    lucide.createIcons();
+
+    function setTheme(mode) {
+      document.body.classList.remove("light", "dark");
+      document.body.classList.add(mode);
+      document.getElementById("themeIcon").setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    setTheme(localStorage.getItem("theme") || "dark");
+
+    function checkKey(step, validKey) {
+      const input = document.getElementById("key" + step);
+      const content = document.getElementById(`step${step}-content`);
+      if (input.value.trim().toLowerCase() === validKey.toLowerCase()) {
+        content.classList.remove("hidden");
+        input.classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>
