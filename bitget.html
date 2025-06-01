@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trading Community</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: white;
+      --card-bg: #1e1e1e;
+      --title-color: white;
+      --accent: #00f0ff;
+      --warning: #e52e71;
+    }
+
+    body.light {
+      --bg-color: #f9f9f9;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --title-color: #1a1a1a;
+      --accent: #007bff;
+      --warning: #d6336c;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #333;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .title {
+      font-size: 1.6em;
+      font-weight: 700;
+      color: var(--title-color);
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .main-content {
+      padding: 30px 20px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card, .about, .warning {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+
+    .about h3 {
+      color: var(--accent);
+      font-size: 1.4em;
+      margin-top: 0;
+    }
+
+    .warning h3 {
+      color: var(--warning);
+      font-size: 1.4em;
+      margin-top: 0;
+    }
+
+    .about p, .warning p {
+      line-height: 1.6;
+      font-size: 0.95em;
+      color: var(--text-color);
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .button-group {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 12px;
+      background: #333;
+      color: white;
+      border: none;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #555;
+    }
+
+    .btn.premium {
+      background: linear-gradient(45deg, #ff8a00, #e52e71);
+    }
+
+    .btn.event {
+      background: #007bff;
+    }
+
+    .user-counter {
+      margin: 15px 0;
+      text-align: center;
+      background: var(--card-bg);
+      border-left: 5px solid var(--accent);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      max-width: 300px;
+      width: 90%;
+    }
+
+    .user-counter .number {
+      font-size: 1.8em;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    .user-counter .label {
+      margin-top: 8px;
+      font-size: 1em;
+      color: var(--text-color);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 8px;
+      border-top: 2px solid #333;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 0.75em;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav a:hover {
+      color: var(--accent);
+    }
+
+    .bottom-nav svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 3px;
+      stroke-width: 2;
+    }
+
+    #partnerBtn {
+      position: fixed;
+      bottom: 100px;
+      left: 20px;
+      background: #e52e71;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    #partnerPopup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      max-width: 90%;
+      width: 360px;
+      z-index: 1000;
+    }
+
+    #partnerPopup h3,
+    #partnerPopup p {
+      color: var(--text-color);
+    }
+
+    #partnerPopup textarea,
+    #partnerPopup select,
+    #partnerPopup input {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    #partnerPopup button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    body.dark .bottom-nav a {
+      color: white;
+    }
+
+    body.light .bottom-nav a {
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="top-left">
+      <img src="logo.png" alt="Logo Trading Community" class="logo" />
+      <div class="title">Trading Community</div>
+    </div>
+    <div class="theme-toggle" id="themeToggle" title="Changer de thème">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="card">
+      <h2>Bienvenue !</h2>
+      <p>Apprenez le trading gratuitement ou accédez aux formations premium.</p>
+      <div class="button-group">
+        <a href="formation.html" class="btn">Formations Gratuites</a>
+        <a href="choix-premium.html" class="btn premium">Formations Premium</a>
+        <a href="evenement.html" class="btn event">Réserver un Événement</a>
+      </div>
+    </div>
+
+    <div class="user-counter">
+      <div class="number" id="userCount">0</div>
+      <div class="label">Utilisateurs inscrits</div>
+    </div>
+
+    <div class="about">
+      <h3>À propos de moi</h3>
+      <p>Je m'appelle <span class="highlight">Hendrinirina RAKOTONARIVO</span>, un <strong>développeur passionné</strong> et spécialiste en <strong>trading</strong>, âgé de 20 ans.<br><br>Avec bientôt <span class="highlight">5 années d’expérience</span> dans le domaine, j’ai fondé la plateforme <span class="highlight">Trading Community</span>, pour former, inspirer et accompagner les futurs traders.<br><br>Mon objectif : <em>rendre le savoir accessible à tous</em>, à travers des contenus de qualité — gratuits ou premium — disponibles à tout moment, partout.</p>
+    </div>
+
+    <div class="warning">
+      <h3>Le trading, un vrai métier exigeant</h3>
+      <p>Beaucoup pensent que le trading est un moyen rapide de s’enrichir. <strong>La vérité est tout autre.</strong><br><br><span class="highlight">Le trading n’est pas un jeu</span>. Ce n’est pas un pari. C’est un métier à part entière, complexe, technique et psychologique.<br><br>Vous pouvez apprendre les bases en quelques semaines… mais devenir rentable demande <strong>des mois, voire des années</strong> de pratique sérieuse, de formation continue, d’analyse et surtout de patience.<br><br>Il faut accepter les pertes, contrôler ses émotions, et <em>savoir rester discipliné</em> même dans la frustration. Ce sont <strong>vos habitudes, votre rigueur, et votre mental</strong> qui feront la différence.<br><br>Chez <span class="highlight">Trading Community</span>, nous ne vendons pas du rêve. Nous transmettons des bases solides, des méthodes et une vision réaliste.<br><br><strong>Si vous êtes prêt à vous investir sérieusement, à apprendre avec humilité, alors oui, vous êtes sur la bonne voie.</strong></p>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="bitget.html"><i data-lucide="home"></i>Accueil</a>
+    <a href="formation.html"><i data-lucide="book-open"></i>Formations</a>
+    <a href="choix-premium.html"><i data-lucide="star"></i>Premium</a>
+    <a href="compte.html"><i data-lucide="user-round"></i>Compte</a>
+  </nav>
+
+  <button id="partnerBtn">Partenariat</button>
+  <div id="partnerPopup">
+    <h3>Bienvenue à toi ! C'est Hendrinirina.</h3>
+    <p>Je suis ouvert aux <strong>collaborations professionnelles.</strong> Choisis ou décris ton idée ci-dessous :</p>
+    <select id="partnerType">
+      <option>Partenariat avec formateur</option>
+      <option>Sponsoring produit ou marque</option>
+      <option>Partage de contenus éducatifs</option>
+      <option>Je veux rejoindre l'équipe</option>
+      <option>Autre (je décris ci-dessous)</option>
+    </select>
+    <textarea id="partnerMessage" rows="4" placeholder="Votre message, idée ou proposition ici..."></textarea>
+    <input type="email" id="partnerEmail" placeholder="Votre adresse email" />
+    <button onclick="sendPartnership()" style="background:#007bff;">Envoyer</button>
+    <button onclick="closePartner()" style="background:gray;">Fermer</button>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const toggle = document.getElementById("themeToggle");
+    const icon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.className = mode;
+      icon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    toggle.addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    setTheme(localStorage.getItem("theme") || "light");
+
+    const partnerBtn = document.getElementById("partnerBtn");
+    const partnerPopup = document.getElementById("partnerPopup");
+
+    partnerBtn.onclick = () => {
+      partnerPopup.style.display = (partnerPopup.style.display === "block") ? "none" : "block";
+    };
+
+    function sendPartnership() {
+      const type = document.getElementById("partnerType").value;
+      const msg = document.getElementById("partnerMessage").value.trim();
+      const email = document.getElementById("partnerEmail").value.trim();
+
+      if (!email || !msg) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
+
+      const fullMsg = `Type : ${type}\nMessage : ${msg}\nEmail : ${email}`;
+      const mailto = `mailto:tradingcommunity10@gmail.com?subject=Demande de Partenariat&body=${encodeURIComponent(fullMsg)}`;
+      window.location.href = mailto;
+    }
+
+    function updateUserCount() {
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      const total = Object.keys(users).length;
+      document.getElementById("userCount").textContent = total;
+    }
+
+    updateUserCount();
+
+    if (!localStorage.getItem("isLoggedIn")) {
+      window.location.href = "auth.html";
+    }
+  </script>
+</body>
+</html>
