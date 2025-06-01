@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formation Premium</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: white;
+      --card-bg: #1e1e1e;
+      --accent: #00c3ff;
+      --lock-color: #555;
+    }
+
+    body.light {
+      --bg-color: #f2f2f2;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --accent: #007bff;
+      --lock-color: #ccc;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #333;
+    }
+
+    .top-bar .title {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .content {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .intro {
+      text-align: center;
+      font-size: 1em;
+      margin-top: 10px;
+      margin-bottom: 25px;
+      background: var(--card-bg);
+      padding: 15px 20px;
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+    }
+
+    .progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .step {
+      width: 120px;
+      height: 120px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: 0.3s ease;
+      color: white;
+    }
+
+    .step.locked {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .step .label {
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .step input {
+      margin-top: 5px;
+      padding: 5px 8px;
+      font-size: 0.85em;
+      border-radius: 6px;
+      border: none;
+      text-align: center;
+      width: 90px;
+    }
+
+    .step[data-color="1"] { background: #3498db; }
+    .step[data-color="2"] { background: #2ecc71; }
+    .step[data-color="3"] { background: #9b59b6; }
+    .step[data-color="4"] { background: #e67e22; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 8px;
+      border-top: 2px solid #333;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 0.75em;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav a:hover {
+      color: var(--accent);
+    }
+
+    .bottom-nav svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 3px;
+      stroke-width: 2;
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Protection par clé -->
+  <script>
+    if (localStorage.getItem("hasActivated") !== "true") {
+      alert("Accès refusé : veuillez entrer votre clé d’activation.");
+      window.location.href = "activation-cle.html";
+    }
+  </script>
+
+  <header class="top-bar">
+    <div class="title">Premium Préenregistrée</div>
+    <div class="theme-toggle" id="themeToggle" title="Changer de thème">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="intro">
+      Lis attentivement chaque PDF + vidéo, puis <strong>cherche le mot-clé</strong> pour débloquer la suite.
+    </div>
+
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="bitget.html"><i data-lucide="home"></i>Accueil</a>
+    <a href="formation.html"><i data-lucide="book-open"></i>Formations</a>
+    <a href="choix-premium.html"><i data-lucide="star"></i>Premium</a>
+    <a href="compte.html"><i data-lucide="user-round"></i>Compte</a>
+  </nav>
+
+  <script>
+    lucide.createIcons();
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.className = mode;
+      themeIcon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    setTheme(localStorage.getItem("theme") || "dark");
+
+    const sessions = [
+      { title: "Introduction Premium", keyword: "alpha" },
+      { title: "Stratégie n°1", keyword: "beta" },
+      { title: "Stratégie n°2", keyword: "gamma" },
+      { title: "Stratégie Avancée", keyword: "delta" }
+    ];
+
+    const progress = document.getElementById("progress");
+    let unlocked = parseInt(localStorage.getItem("premiumProgress")) || 1;
+
+    sessions.forEach((session, index) => {
+      const stepNum = index + 1;
+      const isUnlocked = stepNum <= unlocked;
+      const needsInput = stepNum <= unlocked + 1 && stepNum > 1;
+      const div = document.createElement("div");
+
+      div.className = "step" + (isUnlocked ? "" : " locked");
+      div.setAttribute("data-color", stepNum);
+
+      div.innerHTML = `
+        <i data-lucide="${isUnlocked ? 'play-circle' : 'lock'}"></i>
+        <div class="label">Étape ${stepNum}</div>
+        ${needsInput ? `<input type="text" placeholder="Mot-clé ?" data-index="${index}" />` : ""}
+      `;
+
+      progress.appendChild(div);
+    });
+
+    progress.addEventListener("input", (e) => {
+      if (e.target.tagName === "INPUT") {
+        const input = e.target;
+        const index = parseInt(input.dataset.index);
+        const correct = sessions[index - 1].keyword.toLowerCase().trim();
+        if (input.value.toLowerCase().trim() === correct) {
+          unlocked = index + 1;
+          localStorage.setItem("premiumProgress", unlocked);
+          input.blur(); // Ferme le clavier
+          setTimeout(() => location.reload(), 500);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
