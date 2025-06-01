@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connexion - Trading Community</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: #fff;
+      --card-bg: #1e1e1e;
+      --accent: #00f0ff;
+      --input-bg: #2a2a2a;
+      --title-color: #fff;
+    }
+
+    body.light {
+      --bg-color: #f2f2f2;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --accent: #007bff;
+      --input-bg: #e6e6e6;
+      --title-color: #1a1a1a;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #333;
+    }
+
+    .branding {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .branding img.logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .branding .title {
+      font-size: 1.6em;
+      font-weight: bold;
+      color: var(--title-color);
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .auth-container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .auth-container h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .auth-container input,
+    .auth-container select {
+      width: 100%;
+      height: 48px;
+      padding: 12px;
+      margin: 12px 0;
+      border: none;
+      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+      font-size: 0.9em;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    .auth-container button {
+      width: 100%;
+      height: 48px;
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-size: 1em;
+    }
+
+    .auth-container button:hover {
+      opacity: 0.9;
+    }
+
+    .toggle-form {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+
+    .toggle-form span {
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="branding">
+      <img src="logo.png" alt="Logo Trading Community" class="logo" />
+      <div class="title">Trading Community</div>
+    </div>
+    <div class="theme-toggle" id="themeToggle">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <h2 id="formTitle">Créer un compte</h2>
+    <input type="email" id="email" placeholder="Adresse e-mail" />
+    <input type="text" id="username" placeholder="Nom d'utilisateur" />
+    <input type="password" id="password" placeholder="Mot de passe" />
+    <div class="checkbox-group">
+      <input type="checkbox" id="showPassword" />
+      <label for="showPassword">Afficher le mot de passe</label>
+    </div>
+
+    <div id="extraFields">
+      <select id="country">
+        <option value="">Sélectionnez votre pays</option>
+        <option value="Madagascar">Madagascar</option>
+        <option value="France">France</option>
+        <option value="Belgique">Belgique</option>
+        <option value="Suisse">Suisse</option>
+        <option value="Canada">Canada</option>
+        <option value="Luxembourg">Luxembourg</option>
+        <option value="Cameroun">Cameroun</option>
+        <option value="Sénégal">Sénégal</option>
+        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+        <option value="RDC">République Démocratique du Congo</option>
+      </select>
+
+      <select id="level">
+        <option value="">Niveau en trading</option>
+        <option value="Débutant">Débutant</option>
+        <option value="Intermédiaire">Intermédiaire</option>
+        <option value="Avancé">Avancé</option>
+      </select>
+    </div>
+
+    <button id="authButton">S'inscrire</button>
+    <div class="error" id="errorMsg"></div>
+    <div class="toggle-form">
+      <span id="toggleLink">J’ai déjà un compte</span>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.className = mode;
+      themeIcon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    setTheme(localStorage.getItem("theme") || "dark");
+
+    const formTitle = document.getElementById("formTitle");
+    const authButton = document.getElementById("authButton");
+    const toggleLink = document.getElementById("toggleLink");
+    const errorMsg = document.getElementById("errorMsg");
+    const extraFields = document.getElementById("extraFields");
+    const usernameInput = document.getElementById("username");
+
+    let isLogin = false;
+
+    document.getElementById("showPassword").addEventListener("change", function () {
+      document.getElementById("password").type = this.checked ? "text" : "password";
+    });
+
+    toggleLink.onclick = () => {
+      isLogin = !isLogin;
+      formTitle.textContent = isLogin ? "Connexion" : "Créer un compte";
+      authButton.textContent = isLogin ? "Se connecter" : "S'inscrire";
+      toggleLink.textContent = isLogin ? "Je n’ai pas de compte" : "J’ai déjà un compte";
+      errorMsg.textContent = "";
+      extraFields.style.display = isLogin ? "none" : "block";
+      usernameInput.style.display = isLogin ? "none" : "block";
+    };
+
+    extraFields.style.display = "block";
+    usernameInput.style.display = "block";
+
+    authButton.onclick = () => {
+      const email = document.getElementById("email").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const country = document.getElementById("country").value;
+      const level = document.getElementById("level").value;
+      errorMsg.textContent = "";
+
+      if (!email || !password || (!isLogin && (!username || !country || !level))) {
+        errorMsg.textContent = "Veuillez remplir tous les champs.";
+        return;
+      }
+
+      const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!isEmailValid) {
+        errorMsg.textContent = "Adresse email invalide.";
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (isLogin) {
+        if (users[email] && users[email].password === password) {
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("currentUser", email);
+          window.location.href = "bitget.html";
+        } else {
+          errorMsg.textContent = "Identifiants incorrects.";
+        }
+      } else {
+        if (users[email]) {
+          errorMsg.textContent = "Cet email est déjà utilisé.";
+          return;
+        }
+        users[email] = { username, password, country, level };
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("currentUser", email);
+        window.location.href = "bitget.html";
+      }
+    };
+  </script>
+</body>
+</html>
