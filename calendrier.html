@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Choix des créneaux</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --text-color: white;
+      --card-bg: #1e1e1e;
+      --accent: #00c3ff;
+    }
+
+    body.light {
+      --bg-color: #f5f5f5;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --accent: #007bff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: 0.3s ease;
+    }
+
+    .top-bar {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #333;
+    }
+
+    .title {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .slot-group {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input, select {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #eaeaea;
+    }
+
+    body.dark input, body.dark select {
+      background: #2a2a2a;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      padding: 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 8px;
+      border-top: 2px solid #333;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.75em;
+      transition: all 0.3s ease;
+    }
+
+    .bottom-nav a:hover {
+      color: var(--accent);
+    }
+
+    .bottom-nav svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 3px;
+      stroke-width: 2;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="title">Choisir mes 5 créneaux</div>
+    <div class="theme-toggle" id="themeToggle">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="slot-group">
+      <label for="date">Date</label>
+      <input type="date" id="date" />
+
+      <label for="time">Heure</label>
+      <select id="time">
+        <option value="">-- Choisir une heure --</option>
+        <option>08:00</option>
+        <option>10:30</option>
+        <option>13:00</option>
+        <option>15:30</option>
+        <option>18:00</option>
+      </select>
+
+      <button onclick="addSlot()">Ajouter ce créneau</button>
+    </div>
+
+    <div>
+      <h4>Vos créneaux choisis :</h4>
+      <ul id="slotList"></ul>
+    </div>
+
+    <button style="margin-top: 15px;" onclick="validate()">Valider mes 5 créneaux</button>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="bitget.html"><i data-lucide="home"></i>Accueil</a>
+    <a href="formation.html"><i data-lucide="book-open"></i>Formations</a>
+    <a href="choix-premium.html"><i data-lucide="star"></i>Premium</a>
+    <a href="#"><i data-lucide="user-round"></i>Compte</a>
+  </nav>
+
+  <script>
+    lucide.createIcons();
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(mode) {
+      document.body.classList.remove("light", "dark");
+      document.body.classList.add(mode);
+      themeIcon.setAttribute("data-lucide", mode === "light" ? "moon" : "sun");
+      lucide.createIcons();
+      localStorage.setItem("theme", mode);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.body.classList.contains("light") ? "dark" : "light";
+      setTheme(current);
+    });
+
+    setTheme(localStorage.getItem("theme") || "dark");
+
+    const slotList = document.getElementById("slotList");
+    let slots = [];
+
+    function addSlot() {
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+
+      if (!date || !time) {
+        alert("Veuillez remplir les deux champs !");
+        return;
+      }
+
+      const full = `${date} à ${time}`;
+      if (slots.includes(full)) {
+        alert("Ce créneau est déjà ajouté !");
+        return;
+      }
+
+      if (slots.length >= 5) {
+        alert("Vous avez déjà sélectionné 5 créneaux.");
+        return;
+      }
+
+      slots.push(full);
+      const li = document.createElement("li");
+      li.textContent = full;
+      slotList.appendChild(li);
+    }
+
+    function validate() {
+      if (slots.length < 5) {
+        alert("Veuillez choisir 5 créneaux avant de valider.");
+        return;
+      }
+      localStorage.setItem("reservationSlots", JSON.stringify(slots));
+      window.location.href = "paiement.html";
+    }
+  </script>
+</body>
+</html>
